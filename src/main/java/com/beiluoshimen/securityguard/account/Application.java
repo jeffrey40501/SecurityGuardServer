@@ -41,6 +41,7 @@ import com.beiluoshimen.securityguard.account.json.ResourcesMapper;
 
 //Tell Spring to turn on WebMVC -- enable the DispatcherServlet
 //so that requests can be routed to our Controllers!!!!
+//this put our server against SQL injection. (type check!)
 @EnableWebMvc
 //Tell Spring this class is a configuration class.
 @Configuration
@@ -92,9 +93,6 @@ public class Application extends RepositoryRestMvcConfiguration {
 //		
 		//       http://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html
 		//
-	
-	
-	
 		@Bean
 		EmbeddedServletContainerCustomizer containerCustomizer(
 				@Value("${keystore.file}") String keystoreFile,
@@ -137,5 +135,8 @@ public class Application extends RepositoryRestMvcConfiguration {
 
 			};
 		}
+		
+	 
+		
 
 }

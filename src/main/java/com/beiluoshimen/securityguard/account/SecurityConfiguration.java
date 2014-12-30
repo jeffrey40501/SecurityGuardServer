@@ -1,14 +1,24 @@
 package com.beiluoshimen.securityguard.account;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.util.logging.Logger;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import org.apache.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -114,6 +124,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //		http.authorizeRequests().anyRequest().authenticated();
 	}
 
+	
+
+	
 	/**
 	 * 
 	 * This method is used to setup the users that will be able to login to the
@@ -126,20 +139,38 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	 * @param auth
 	 * @throws Exception
 	 */
+		
+	@Autowired
+	@Qualifier("userDetailsService")
+    private LoginService loginService;
+	
 	@Autowired
 	protected void registerAuthentication(
 			final AuthenticationManagerBuilder auth) throws Exception {
+		//we need Mongo Implementation
 		
-		// This example creates a simple in-memory UserDetailService that
-		// is provided by Spring
-		auth.inMemoryAuthentication()
-				.withUser("coursera")
-				.password("changeit")
-				.authorities("admin","user")
-				.and()
-				.withUser("student")
-				.password("changeit")
-				.authorities("user");
+		//mongodb
+		auth.userDetailsService(loginService);
+ 
+		
+		//jDBC usage...
+//		auth //Builder Design Pattern  
+//        .jdbcAuthentication().dataSource(dataSource)   
+//        .usersByUsernameQuery("select username,password, enabled from account where username=?")  
+//        .authoritiesByUsernameQuery("select username, authority from authorities where username=?");
+		
+		
+		//In memory usage..
+//		auth.inMemoryAuthentication()
+//				.withUser("test2")
+//				.password("123")
+//				.authorities("admin","user")
+//				.and()
+//				.withUser("student")
+//				.password("changeit")
+//				.authorities("user");
 	}
+	
+
 
 }

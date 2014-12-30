@@ -3,8 +3,12 @@ package com.beiluoshimen.securityguard.account.controller;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,7 +50,12 @@ public class AccountSvc{
 	@RequestMapping(value = AccountSvcApi.ACCOUNT_SVC_PATH, method = RequestMethod.POST)
 	public @ResponseBody boolean addAccount(
 			@RequestBody Account v) {
+		if (!(accounts.findByUsername(v.getUsername())).isEmpty()) {
+			//account name already exist.
+			return false;
+		}
 		accounts.save(v);
+
 		return true;
 	}
 	
@@ -111,20 +120,20 @@ public class AccountSvc{
 	private static HashMap<Integer, Integer> charPricesMap;
 	static{
 		charPricesMap = new HashMap<Integer, Integer>();//(character) no v.s. price
-		charPricesMap.put(100, 10);
-		charPricesMap.put(101, 10);
-		charPricesMap.put(102, 10);
-		charPricesMap.put(103, 15);
+		charPricesMap.put(100, 0);
+		charPricesMap.put(101, 0);
+		charPricesMap.put(102, 0);
+		charPricesMap.put(103, 0);
 	}
 	
 	//initial one list , use to return the info query about characters on the market.
 	private static ArrayList<Character> charlist;
 	static{
 		charlist = new ArrayList<Character>();
-		charlist.add(new Character("小叮噹",100, 10, "http://i.imgur.com/wwFDtp4.png", "127.0.0.1", "10001"));
-		charlist.add(new Character("妮可妮可尼",101, 10, "http://i.imgur.com/X0AZMXG.png", "127.0.0.1", "10002"));
-		charlist.add(new Character("測試3",102, 10, "http://i.imgur.com/wFfq4Xm.png", "127.0.0.1", "10003"));
-		charlist.add(new Character("測試4",103, 15, "http://i.imgur.com/wwFDtp4.png", "127.0.0.1", "10004"));
+		charlist.add(new Character("小叮噹",100, 0, "http://i.imgur.com/wwFDtp4.png", "127.0.0.1", "10001"));
+		charlist.add(new Character("妮可妮可尼",101, 0, "http://i.imgur.com/X0AZMXG.png", "127.0.0.1", "10002"));
+		charlist.add(new Character("測試3",102, 0, "http://i.imgur.com/wFfq4Xm.png", "127.0.0.1", "10003"));
+		charlist.add(new Character("測試4",103, 0, "http://i.imgur.com/wwFDtp4.png", "127.0.0.1", "10004"));
 		
 	}
 	

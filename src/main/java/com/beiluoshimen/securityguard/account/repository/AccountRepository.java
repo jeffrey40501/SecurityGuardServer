@@ -41,6 +41,10 @@ public interface AccountRepository extends MongoRepository<Account, BigInteger>{
 			@Param(AccountSvcApi.PASSWORD_PARAMETER) String password
 			);
 	
+	public Collection<Account> findByUsername(
+			@Param(AccountSvcApi.USERNAME_PARAMETER) String username);
+	
+	
 	 @Query("update Account a set a.coin = :coin where a.username = :username and a.password = :password") 
 	 public int setCoin(
 			 @Param(AccountSvcApi.COIN_PARAMETER)int after,
