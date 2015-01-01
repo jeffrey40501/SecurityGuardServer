@@ -4,7 +4,6 @@ package com.beiluoshimen.securityguard.account.client;
 import java.util.Collection;
 
 import com.beiluoshimen.securityguard.account.controller.Character;
-import com.beiluoshimen.securityguard.account.controller.CharacterData;
 import com.beiluoshimen.securityguard.account.repository.Account;
 
 import retrofit.http.Body;
