@@ -1,91 +1,242 @@
 package com.beiluoshimen.securityguard.account.controller;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.beiluoshimen.securityguard.account.client.DlSvcApi;
 
 
 @Controller
 public class DlSvc {
-
-
-	@RequestMapping(value = DlSvcApi.DL_SVC_PATH, method = RequestMethod.GET)
-	public @ResponseBody DlData dlChatacter(
-			@RequestParam int no){
-		//we can check if this account has "really bought "this character if 
-	//we require the user to submit their username
-		
-		switch (no) {
-		case 100:
-			
-			return data100;
-
-		case 101:
-			
-			return data101;
-		case 102:
-			
-			return data102;
-		case 103:
-			
-			return data103;
-			
-		default:
-			//no this character.
-			return null;
-		}
-		
-	}
-
-	//In-memory data.
-	private static final int no100 = 100;
-	private static final int no101 = 101;
-	private static final int no102 = 102;
-	private static final int no103 = 103;
+//PROJECT FULLPATH
+	private String projectPath = "/Users/Andy/Documents/workspace/SecurityGuardServer";
+//	private String projectPath = "";
 	
-	private static final int size100 = 4255597;
-	private static final int size101 = 10000;
-	private static final int size102 = 10000;
-	private static final int size103 = 10000;
+    // Path of the files to be downloaded, relative to application's directory
+    private String filePath100 = projectPath + "/assets/100.zip";
+    private String filePath101 = projectPath + "/assets/101.zip";
+    private String filePath102 = projectPath + "/assets/102.zip";
+    private String filePath103 = projectPath + "/assets/103.zip";
+    //Size of a byte buffer to read/write file
+    private static final int BUFFER_SIZE = 4096;
+    
+    //open browser, type in :https://localhost:8443/download/100.zip 
+    //as test...
+    
+    //Method for handling file download request from client  
+    @RequestMapping(value = DlSvcApi.DL_100_PATH,method = RequestMethod.GET)
+    public void doDownload100(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+    	
+        // get absolute path of the application
+        ServletContext context = request.getServletContext();
+//        String appPath = context.getRealPath("");
+//        System.out.println("appPath = " + appPath);
+ 
+//         construct the complete absolute path of the file
+//        String fullPath = appPath + filePath100;
+        String fullPath = filePath100;
+        File downloadFile = new File(fullPath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+         
+        // get MIME type of the file
+        String mimeType = context.getMimeType(fullPath);
+        if (mimeType == null) {
+            // set to binary type if MIME mapping not found
+            mimeType = "application/octet-stream";
+        }
+        System.out.println("MIME type: " + mimeType);
+ 
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+ 
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                downloadFile.getName());
+        response.setHeader(headerKey, headerValue);
+ 
+        // get output stream of the response
+        OutputStream outStream = response.getOutputStream();
+ 
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+ 
+        // write bytes read from the input stream into the output stream
+        while ((bytesRead = inputStream.read(buffer)) > 0) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+ 
+        inputStream.close();
+        outStream.close();
+    
+    }
 
-	private static DlData data100;
-	private static DlData data101;
-	private static DlData data102;
-	private static DlData data103;
-	
-//	private static final File file100 = new File("/Users/Andy/Documents/workspace/SecurityGuardServer/assets/haru.zip");
-//	private static final File file101 = new File("/Users/Andy/Documents/workspace/SecurityGuardServer/assets/");
-//	private static final File file102 = new File("/Users/Andy/Documents/workspace/SecurityGuardServer/assets/");
-//	private static final File file103 = new File("/Users/Andy/Documents/workspace/SecurityGuardServer/assets/");
-//
-//    private static DataInputStream dis = null;
-//	
-	//In-memory data.
-	static{		
-		
-//		try {
-//			dis = new DataInputStream(new BufferedInputStream(new FileInputStream(file100)));
-//			while (dis.available() != 0) {
-//				int a;
-//				a = dis.read(byte100, 0, size100);
-//				System.out.println("READ byte :"+a);
-//			}
-//		} catch (FileNotFoundException e) {
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+    
+    //Method for handling file download request from client  
+    @RequestMapping(value = DlSvcApi.DL_101_PATH,method = RequestMethod.GET)
+    public void doDownload101(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+    	
+        // get absolute path of the application
+        ServletContext context = request.getServletContext();
+//        String appPath = context.getRealPath("");
+        String appPath = context.getContextPath();
+        System.out.println("appPath = " + appPath);
+ 
+        // construct the complete absolute path of the file
+//        String fullPath = appPath + filePath101;      
+        String fullPath = filePath101;      
+        File downloadFile = new File(fullPath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+         
+        // get MIME type of the file
+        String mimeType = context.getMimeType(fullPath);
+        if (mimeType == null) {
+            // set to binary type if MIME mapping not found
+            mimeType = "application/octet-stream";
+        }
+        System.out.println("MIME type: " + mimeType);
+ 
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+ 
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                downloadFile.getName());
+        response.setHeader(headerKey, headerValue);
+ 
+        // get output stream of the response
+        OutputStream outStream = response.getOutputStream();
+ 
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+ 
+        // write bytes read from the input stream into the output stream
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+ 
+        inputStream.close();
+        outStream.close();
+    
+    }
 
-		data100 = new DlData(size100, no100, "https://doc-0c-84-docs.googleusercontent.com/docs/securesc/ha0ro937gcuc7l7deffksulhg5h7mbp1/tar6ffhen4esvqtfl67qcduotr6rb7vu/1420120800000/11249192677254634747/*/0B4FzP_2MdAZuWURsNWtLaGxabjA?e=download");
-		data101 = new DlData(size101, no101, "");
-		data102 = new DlData(size102, no102, "");
-		data103 = new DlData(size103, no103, "");	
-	}
-	
+    
+    //Method for handling file download request from client  
+    @RequestMapping(value = DlSvcApi.DL_102_PATH,method = RequestMethod.GET)
+    public void doDownload102(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+    	
+        // get absolute path of the application
+        ServletContext context = request.getServletContext();
+        String appPath = context.getRealPath("");
+        System.out.println("appPath = " + appPath);
+ 
+        // construct the complete absolute path of the file
+//        String fullPath = appPath + filePath102;      
+        String fullPath = filePath102;      
+        File downloadFile = new File(fullPath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+         
+        // get MIME type of the file
+        String mimeType = context.getMimeType(fullPath);
+        if (mimeType == null) {
+            // set to binary type if MIME mapping not found
+            mimeType = "application/octet-stream";
+        }
+        System.out.println("MIME type: " + mimeType);
+ 
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+ 
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                downloadFile.getName());
+        response.setHeader(headerKey, headerValue);
+ 
+        // get output stream of the response
+        OutputStream outStream = response.getOutputStream();
+ 
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+ 
+        // write bytes read from the input stream into the output stream
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+ 
+        inputStream.close();
+        outStream.close();
+    
+    }
+
+    
+    //Method for handling file download request from client  
+    @RequestMapping(value = DlSvcApi.DL_103_PATH,method = RequestMethod.GET)
+    public void doDownload103(HttpServletRequest request,
+            HttpServletResponse response) throws IOException {
+    	
+        // get absolute path of the application
+        ServletContext context = request.getServletContext();
+        String appPath = context.getRealPath("");
+        System.out.println("appPath = " + appPath);
+ 
+        // construct the complete absolute path of the file
+//        String fullPath = appPath + filePath103;      
+        String fullPath =  filePath103;      
+        File downloadFile = new File(fullPath);
+        FileInputStream inputStream = new FileInputStream(downloadFile);
+         
+        // get MIME type of the file
+        String mimeType = context.getMimeType(fullPath);
+        if (mimeType == null) {
+            // set to binary type if MIME mapping not found
+            mimeType = "application/octet-stream";
+        }
+        System.out.println("MIME type: " + mimeType);
+ 
+        // set content attributes for the response
+        response.setContentType(mimeType);
+        response.setContentLength((int) downloadFile.length());
+ 
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                downloadFile.getName());
+        response.setHeader(headerKey, headerValue);
+ 
+        // get output stream of the response
+        OutputStream outStream = response.getOutputStream();
+ 
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = -1;
+ 
+        // write bytes read from the input stream into the output stream
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            outStream.write(buffer, 0, bytesRead);
+        }
+ 
+        inputStream.close();
+        outStream.close();
+    
+    }
+
 	
 }
