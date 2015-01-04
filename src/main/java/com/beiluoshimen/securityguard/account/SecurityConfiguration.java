@@ -111,12 +111,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		// Require clients to login and have an account with the "user" role
 		// in order to send a POST request to /account
 		// http.authorizeRequests().antMatchers(HttpMethod.POST, "/acccount").hasRole("user");
-
+		
+		
+		//get market models data
 		http.authorizeRequests().antMatchers(AccountSvcApi.CHARACTER_PATH).permitAll();
+		//register
 		http.authorizeRequests().antMatchers(AccountSvcApi.ACCOUNT_SVC_PATH).permitAll();
 		
-		//the following methid must be login first .
+		//the following method must be login first .
+		//add coin.
 		http.authorizeRequests().antMatchers(AccountSvcApi.COIN_PATH).authenticated();
+		//buy character.
 		http.authorizeRequests().antMatchers(AccountSvcApi.BUY_PATH).authenticated();
 				
 		
